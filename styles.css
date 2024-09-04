@@ -1,0 +1,99 @@
+/* styles.css */
+
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4; /* Light background for light mode */
+    color: #333; /* Dark text for light mode */
+}
+
+/* Dark Mode Styles */
+body.dark-mode {
+    background-color: #121212; /* Dark background for dark mode */
+    color: #e0e0e0; /* Light text for dark mode */
+}
+
+.container {
+    background-color: #ffffff; /* White background for container in light mode */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Light shadow for container */
+}
+
+body.dark-mode .container {
+    background-color: #1e1e1e; /* Darker background for container in dark mode */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.5); /* Darker shadow for container */
+}
+
+/* Headings */
+h2 {
+    margin-bottom: 20px;
+    color: inherit; /* Inherit color from body for dark mode */
+}
+
+/* Table Styles */
+.table td, .table th {
+    vertical-align: middle;
+    text-align: center;
+    padding: 8px; /* Added padding for table cells */
+}
+
+.table thead th {
+    background-color: #f8f9fa; /* Light background for table header in light mode */
+}
+
+body.dark-mode .table thead th {
+    background-color: #343a40; /* Dark background for table header in dark mode */
+    color: #e0e0e0; /* Light text color for table header in dark mode */
+}
+
+.table tbody tr:nth-child(even) {
+    background-color: #f9f9f9; /* Alternate row color in light mode */
+}
+
+body.dark-mode .table tbody tr:nth-child(even) {
+    background-color: #2c2c2c; /* Alternate row color in dark mode */
+}
+
+/* Section Styles */
+section {
+    margin-bottom: 30px;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+/* Alternate Section Colors */
+section:nth-of-type(odd) {
+    background-color: #ffffff; /* Light background for odd sections in light mode */
+}
+
+body.dark-mode section:nth-of-type(odd) {
+    background-color: #1e1e1e; /* Darker background for odd sections in dark mode */
+}
+
+/* Footer */
+footer p {
+    margin-top: 30px;
+    font-style: italic;
+}
+
+/* Logo Preview */
+#logoPreview {
+    width: 300px; /* Set the desired width */
+    height: 250px; /* Set the desired height */
+    object-fit: contain; /* Maintain aspect ratio and fit within the canvas */
+    border: 1px solid #ddd; /* Optional: add a border for better visibility */
+    background-color: #f8f9fa; /* Optional: set a background color */
+}
+
+/* Button Styles */
+.btn {
+    margin: 5px;
+}
+
+/* Dark Mode Toggle Button */
+#darkModeToggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+}

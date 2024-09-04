@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generated Bill/Receipt</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            width: 794px;
+            height: 1123px;
+            margin: auto;
+            background-color: #ffffff;
+            box-sizing: border-box;
+        }
+
+        h2,
+        h4 {
+            margin-bottom: 20px;
+        }
+
+        .invoice-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .company-details,
+        .client-details {
+            margin-bottom: 20px;
+        }
+
+        .product-details table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .product-details th,
+        .product-details td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+
+        .product-details th {
+            background-color: #f8f8f8;
+        }
+
+        .invoice-summary {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-top: 20px;
+        }
+
+        .summary-details {
+            max-width: 60%;
+        }
+
+        .signatory {
+            text-align: center;
+            max-width: 30%;
+        }
+
+        .signatory canvas {
+            display: block;
+            margin: 0 auto 10px;
+        }
+
+        .footer-text {
+            font-size: 12px;
+            text-align: center;
+            width: 100%;
+            bottom: 20px;
+        }
+
+        @media print {
+            body {
+                width: 210mm;
+                height: 297mm;
+                margin: 0;
+                padding: 20px;
+                box-sizing: border-box;
+                position: relative;
+                background-color: #fff;
+                page-break-after: always;
+            }
+        }
+
+        .product-details table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .product-details th,
+        .product-details td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+
+        .product-details th {
+            background-color: #f8f8f8;
+        }
+
+        .invoice-summary {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-top: 20px;
+        }
+
+        .summary-details {
+            max-width: 60%;
+        }
+
+        .signatory {
+            text-align: center;
+            max-width: 30%;
+        }
+
+        .signatory canvas {
+            display: block;
+            margin: 0 auto 10px;
+        }
+
+        .footer-text {
+            font-size: 12px;
+            text-align: center;
+            width: 100%;
+        }
+
+        .page-break {
+            page-break-before: always;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="invoice-header">
+        <div>
+            <h2>Invoice</h2>
+            <div class="company-details">
+                <strong>Company/Freelancer:</strong> <span id="companyName"></span><br>
+                <strong>Address:</strong> <span id="companyAddress"></span><br>
+                <strong>Email:</strong> <span id="companyEmail"></span><br>
+                <strong>Phone:</strong> <span id="companyPhone"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="client-details">
+        <h4>Client/Customer Information</h4>
+        <strong>Name:</strong> <span id="clientName"></span><br>
+        <strong>Address:</strong> <span id="clientAddress"></span><br>
+        <strong>Email:</strong> <span id="clientEmail"></span><br>
+        <strong>Phone:</strong> <span id="clientPhone"></span>
+    </div>
+
+    <div class="product-details">
+        <h4>Product/Service Details</h4>
+        <table>
+            <thead>
+                <tr>
+                    <th>Item Name</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Tax (%)</th>
+                    <th>Subtotal</th>
+                </tr>
+            </thead>
+            <tbody id="productRows">
+                <!-- Product rows will be injected here -->
+            </tbody>
+        </table>
+    </div>
+
+    <div class="invoice-summary">
+        <div class="summary-details">
+            <h4>Invoice Summary</h4>
+            <strong>Subtotal:</strong> &#8377; <span id="totalSubtotal"></span><br>
+            <strong>Total Tax:</strong> <span id="totalTax"></span><br>
+            <strong>Total Amount:</strong> &#8377; <span id="totalAmount"></span><br>
+            <strong>Balance (if in Cash):</strong> &#8377; <span id="balanceAmount"></span><br>
+            <strong>Payment Method:</strong> <span id="paymentMethod"></span><br>
+            <strong>UPI ID:</strong> <span id="upiId"></span><br>
+            <strong>GST No:</strong> <span id="gstNo"></span><br>
+            <strong>Date of Issue:</strong> <span id="invoiceDate"></span><br>
+            <strong>Invoice No:</strong> <span id="invoiceNo"></span>
+        </div>
+        <div class="signatory">
+            <canvas id="logoPreviewTemplate" width="100" height="100"></canvas>
+            <div>Authorised Signatory</div>
+        </div>
+    </div>
+
+    <br><br><br><br>
+
+    <div class="footer-text">
+        Certified that the particulars given above are true and correct. This is a system-generated receipt.
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Retrieve the stored data
+            const invoiceData = JSON.parse(localStorage.getItem('invoiceData'));
+
+            if (invoiceData) {
+                // Populate the fields
+                document.getElementById('companyName').textContent = invoiceData.companyName;
+                document.getElementById('companyAddress').textContent = invoiceData.companyAddress;
+                document.getElementById('companyEmail').textContent = invoiceData.companyEmail;
+                document.getElementById('companyPhone').textContent = invoiceData.companyPhone;
+
+                document.getElementById('clientName').textContent = invoiceData.clientName;
+                document.getElementById('clientAddress').textContent = invoiceData.clientAddress;
+                document.getElementById('clientEmail').textContent = invoiceData.clientEmail;
+                document.getElementById('clientPhone').textContent = invoiceData.clientPhone;
+
+                document.getElementById('invoiceNo').textContent = invoiceData.invoiceNo;
+                document.getElementById('invoiceDate').textContent = invoiceData.invoiceDate;
+                document.getElementById('totalSubtotal').textContent = invoiceData.totalSubtotal;
+                document.getElementById('totalTax').textContent = invoiceData.totalTax;
+                document.getElementById('totalAmount').textContent = invoiceData.totalAmount;
+
+                // document.getElementById('cashAmount').textContent = invoiceData.cashAmount;
+                document.getElementById('balanceAmount').textContent = invoiceData.balanceAmount;
+
+                document.getElementById('paymentMethod').textContent = invoiceData.paymentMethod;
+                
+                // document.getElementById('note').textContent = invoiceData.note;
+                document.getElementById('upiId').textContent = invoiceData.upiId;
+                document.getElementById('gstNo').textContent = invoiceData.gstNo;
+
+                // Populate product table
+                const productTable = document.querySelector('.product-details table tbody');
+                invoiceData.items.forEach(item => {
+                    const row = productTable.insertRow();
+                    row.innerHTML = `
+                        <td>${item.itemName}</td>
+                        <td>${item.quantity}</td>
+                        <td>${item.price}</td>
+                        <td>${item.tax}</td>
+                        <td>${item.subtotal}</td>
+                    `;
+                });
+
+                // Render the logo
+                if (invoiceData.logo) {
+                    const logoCanvas = document.getElementById('logoPreviewTemplate');
+                    const ctx = logoCanvas.getContext('2d');
+                    const img = new Image();
+                    img.onload = function () {
+                        ctx.drawImage(img, 0, 0, logoCanvas.width, logoCanvas.height);
+                    };
+                    img.src = invoiceData.logo;
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

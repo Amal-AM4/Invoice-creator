@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice Generator</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        #logoPreview {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+        }
+        .upload-container, .preview-container {
+            display: flex;
+            align-items: center;
+        }
+        .upload-container {
+            justify-content: flex-start;
+        }
+        .preview-container {
+            justify-content: flex-end;
+        }
+    </style>
+</head>
+<body>
+    <div class="container my-5">
+        <h2 class="text-center">Invoice Generator</h2>
+        <button id="darkModeToggle" class="btn btn-secondary">Toggle Dark Mode</button>
+
+        
+        <!-- Company/Freelancer Information -->
+        <section class="my-4">
+            <h4>Company/Freelancer Information</h4>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="companyName" class="form-label">Name</label>
+                    <input type="text" class="form-control" id="companyName" placeholder="e.g., ABC Corp" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="companyAddress" class="form-label">Address (Optional)</label>
+                    <input type="text" class="form-control" id="companyAddress" placeholder="e.g., 123 Main St">
+                </div>
+                <div class="col-md-6">
+                    <label for="companyEmail" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="companyEmail" placeholder="e.g., info@abccorp.com" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="companyPhone" class="form-label">Phone Number</label>
+                    <input type="tel" class="form-control" id="companyPhone" placeholder="e.g., +1-234-567-8901" required>
+                </div>
+            </div>
+        </section>
+
+        <!-- Client/Customer Information -->
+        <section class="my-4">
+            <h4>Client/Customer Information</h4>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="clientName" class="form-label">Name</label>
+                    <input type="text" class="form-control" id="clientName" placeholder="e.g., John Doe" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="clientAddress" class="form-label">Address (Optional)</label>
+                    <input type="text" class="form-control" id="clientAddress" placeholder="e.g., 456 Elm St">
+                </div>
+                <div class="col-md-6">
+                    <label for="clientEmail" class="form-label">Email (Optional)</label>
+                    <input type="email" class="form-control" id="clientEmail" placeholder="e.g., john.doe@example.com">
+                </div>
+                <div class="col-md-6">
+                    <label for="clientPhone" class="form-label">Phone Number</label>
+                    <input type="tel" class="form-control" id="clientPhone" placeholder="e.g., +1-987-654-3210" required>
+                </div>
+            </div>
+        </section>
+
+        <!-- Product/Service Details -->
+        <section class="my-4">
+            <h4>Product/Service Details</h4>
+            <table class="table table-bordered" id="productTable">
+                <thead>
+                    <tr>
+                        <th>Item Name</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                        <th>Tax (%)</th>
+                        <th>Subtotal</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><input type="text" class="form-control" name="itemName[]" placeholder="e.g., Product A" required></td>
+                        <td><input type="number" class="form-control" name="quantity[]" placeholder="e.g., 2" required></td>
+                        <td><input type="number" class="form-control" name="price[]" placeholder="e.g., 100.00" required></td>
+                        <td><input type="number" class="form-control" name="tax[]" value="0" placeholder="e.g., 5"></td>
+                        <td class="subtotal"></td>
+                        <td><button type="button" class="btn btn-danger remove-btn">Cancel</button></td>
+                    </tr>
+                </tbody>
+            </table>
+            <button type="button" id="addItemBtn" class="btn btn-primary">Add Item</button>
+        </section>
+
+        <!-- Payment Information -->
+        <section class="my-4">
+            <h4>Payment Information</h4>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="upiId" class="form-label">UPI ID (Optional)</label>
+                    <input type="text" class="form-control" id="upiId" placeholder="e.g., example@upi">
+                </div>
+                <div class="col-md-6">
+                    <label for="gstNo" class="form-label">GST No (Optional)</label>
+                    <input type="text" class="form-control" id="gstNo" placeholder="e.g., 1234567890">
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Payment Method</label><br>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="paymentMethod" id="paymentCash" value="cash">
+                    <label class="form-check-label" for="paymentCash">In Cash</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="paymentMethod" id="paymentOnline" value="online">
+                    <label class="form-check-label" for="paymentOnline">Online</label>
+                </div>
+            </div>
+        </section>
+
+        <!-- Invoice Summary -->
+        <section class="my-4">
+            <h4>Invoice Summary</h4>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="invoiceNo" class="form-label">Invoice No.</label>
+                        <input type="text" class="form-control" id="invoiceNo" placeholder="e.g., INV-123" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="invoiceDate" class="form-label">Date of Issue</label>
+                        <input type="date" class="form-control" id="invoiceDate" required>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="totalSubtotal" class="form-label">Subtotal</label>
+                        <input type="text" class="form-control" id="totalSubtotal" readonly placeholder="e.g., 200.00">
+                    </div>
+                    <div class="mb-3">
+                        <label for="totalTax" class="form-label">Total Tax</label>
+                        <input type="text" class="form-control" id="totalTax" readonly placeholder="e.g., 10.00">
+                    </div>
+                    <div class="mb-3">
+                        <label for="totalAmount" class="form-label">Total Amount</label>
+                        <input type="text" class="form-control" id="totalAmount" readonly placeholder="e.g., 210.00">
+                    </div>
+                    <div class="mb-3" id="balanceDueSection" style="display: none;">
+                        <label for="cashAmount" class="form-label">Cash Amount Handed</label>
+                        <input type="number" class="form-control" id="cashAmount" placeholder="Enter cash amount">
+                        <label for="balanceDue" class="form-label">Balance Due</label>
+                        <input type="text" class="form-control" id="balanceDue" readonly placeholder="e.g., 50.00">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Additional Options -->
+        <section class="my-4">
+            <h4>Additional Options</h4>
+            <div class="mb-3">
+                <label for="note" class="form-label">Note</label>
+                <textarea class="form-control" id="note" rows="3" placeholder="Any additional notes..."></textarea>
+            </div>
+            <div class="mb-3 upload-container">
+                <div>
+                    <label for="uploadLogo" class="form-label">Upload Signatory/Company Seal/Logo</label>
+                    <input type="file" class="form-control" id="uploadLogo" accept="image/*">
+                </div>
+            </div>
+            <div class="mb-3 preview-container">
+                <div>
+                    <label class="form-label">Preview Logo</label>
+                    <canvas id="logoPreview" class="border"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer Message -->
+        <footer class="text-center my-4">
+            <p class="small">This is a system-generated invoice.</p>
+        </footer>
+
+        <!-- Download Button -->
+        <div class="text-center">
+            <button id="downloadBtn" class="btn btn-success">Download Invoice</button>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="scripts.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const darkModeToggle = document.getElementById('darkModeToggle');
+            
+            // Check local storage for dark mode preference
+            if (localStorage.getItem('dark-mode') === 'enabled') {
+                document.body.classList.add('dark-mode');
+            }
+
+            darkModeToggle.addEventListener('click', function() {
+                document.body.classList.toggle('dark-mode');
+                // Save user preference in local storage
+                if (document.body.classList.contains('dark-mode')) {
+                    localStorage.setItem('dark-mode', 'enabled');
+                } else {
+                    localStorage.setItem('dark-mode', 'disabled');
+                }
+            });
+        });
+
+    </script>
+</body>
+</html>
